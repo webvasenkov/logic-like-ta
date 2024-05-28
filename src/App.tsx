@@ -1,10 +1,12 @@
 import Sidebar from '@/components/sidebar';
 import CourseCard from '@/components/course-card';
 import { Course } from '@/types/course.interface';
+import { FidgetSpinner } from 'react-loader-spinner';
 import { useEffect, useState } from 'react';
 import { getCourses } from '@/api/courses';
 
 function App() {
+  const [isLoadedCourses, setIsLoadedCourses] = useState(false);
   const [courses, setCourses] = useState<Course[] | []>([]);
   const [topics, setTopics] = useState<string[] | []>([]);
   const [selectedTopic, setSelectedTopic] = useState<string>('');
@@ -18,10 +20,19 @@ function App() {
       setTopics(topicsData);
       setSelectedTopic(topicsData[0]);
       setCourses(data);
+      setIsLoadedCourses(true);
     }
 
     setupCoursesData();
   }, []);
+
+  if (!isLoadedCourses) {
+    return (
+      <div className='loader'>
+        <FidgetSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className='main'>
